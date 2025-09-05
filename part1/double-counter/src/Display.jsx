@@ -1,7 +1,7 @@
-const Display = ({ counter }) => {
+const Display = ({ total }) => {
   return (
     <>
-      <p>The counter value in the display is {counter}</p>
+      <p>The total number of clicks is {total}</p>
     </>
   );
 };
