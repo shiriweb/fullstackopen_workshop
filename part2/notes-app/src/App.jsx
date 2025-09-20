@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Note from "./components/Note";
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes);
+function App() {
+  const [notes, setNotes] = useState([]);
   const [newNotes, SetNewNotes] = useState("Type something...");
   const [showAll, setShowAll] = useState(true);
 
-  useEffect(
-    function () {
-      console.log("This is the Use Effect");
-    },
-    [notes]
-  );
+  useEffect(function () {
+    axios.get("http://localhost:3001/notes").then((response) => {
+      setNotes(response.data);
+    });
+  }, []);
 
   const showingNotes = showAll
     ? notes
@@ -58,5 +58,5 @@ const App = (props) => {
       </form>
     </div>
   );
-};
+}
 export default App;
