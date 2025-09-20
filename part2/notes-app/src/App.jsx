@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Note from "./components/Note";
 const App = (props) => {
   const [notes, setNotes] = useState(props.notes);
   const [newNotes, SetNewNotes] = useState("Type something...");
   const [showAll, setShowAll] = useState(true);
+
+  useEffect(
+    function () {
+      console.log("This is the Use Effect");
+    },
+    [notes]
+  );
 
   const showingNotes = showAll
     ? notes
