@@ -1,0 +1,16 @@
+get http://localhost:3001/api/notes/2
+
+### Delete a note
+
+delete http://localhost:3001/api/notes/2
+
+### adding the new note
+
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "This is Shirisha Singh from Tankeshwor",
+    "important": false,
+    "data": "Hello World"
+}
