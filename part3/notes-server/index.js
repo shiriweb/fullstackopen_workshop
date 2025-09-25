@@ -2,6 +2,13 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
+
+function myMiddle(_, _, next) {
+  console.log("Middleware");
+  next();
+}
+app.use(myMiddle);
+
 let notes = [
   {
     id: "1",
