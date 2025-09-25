@@ -3,6 +3,7 @@ const app = express();
 
 app.use(express.json());
 
+// middleware concept
 function myMiddle(_, _, next) {
   console.log("Middleware");
   next();
