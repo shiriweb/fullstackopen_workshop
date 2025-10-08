@@ -4,11 +4,26 @@ const app = express();
 app.use(express.json());
 
 // middleware concept
-function myMiddle(_, _, next) {
-  console.log("Middleware");
+// function myMiddle(_, _, next) {
+//   console.log("Middleware");
+//   next();
+// }
+// app.use(myMiddle);\
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+app.use(unknownEndpoint);
+
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
   next();
-}
-app.use(myMiddle);
+};
+
+app.use(requestLogger);
 
 let notes = [
   {
