@@ -1,19 +1,21 @@
 const express = require("express");
 const app = express();
-
+const cors = require("cors");
+app.use(cors());
 app.use(express.json());
+app.use(express.static("dist"));
 
 // middleware concept
 // function myMiddle(_, _, next) {
 //   console.log("Middleware");
 //   next();
 // }
-// app.use(myMiddle);\
+// app.use(myMiddle);
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
-app.use(unknownEndpoint);
+// app.use(unknownEndpoint);
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
