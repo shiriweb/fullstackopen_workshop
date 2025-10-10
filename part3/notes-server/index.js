@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require("mongoose");
 app.use(cors());
 app.use(express.json());
 app.use(express.static("dist"));
@@ -12,11 +13,6 @@ app.use(express.static("dist"));
 // }
 // app.use(myMiddle);
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
-// app.use(unknownEndpoint);
-
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
   console.log("Path:  ", request.path);
@@ -27,23 +23,55 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
-let notes = [
-  {
-    id: "1",
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: "2",
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: "3",
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
+////////////////////////////////
+
+// Connecting database
+const url = `mongodb+srv://shirisha:password12345@cluster0.q8zc9wj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+// mongoose.set('strictQuery',false)
+mongoose.connect(url);
+
+// ----------------
+// defining the schema
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+});
+// ------------------
+
+// creating the model for the schema
+const Note = mongoose.model("Note", noteSchema);
+
+// Instance of the model
+// Creating the new the data
+
+// const note = new Note({
+//   content: "Js is interesting",
+//   important: false,
+// });
+
+// // Saving the data to the database
+// note.save().then((result) => {
+//   console.log("note saved!");
+//   mongoose.connection.close();
+// });
+
+// fetching the data from the database
+// Note.findById("68e89605f8d4a55b16eb1423").then((result) => {
+//   //   result.forEach((note) => {
+//   console.log(result);
+//   //   });
+//   mongoose.connection.close();
+// });
+
+// using async/await
+// async function getBYId() {
+//   const result = await Note.findById("68e8a519a0910d06ffa70d49");
+//   console.log(result);
+// }
+// getBYId();
+
+////////////////////////////////////
+let notes = [];
 
 // const app = http.createServer((request, response) => {
 //   response.writeHead(200, { 'Content-Type': 'application/json' })
@@ -52,8 +80,9 @@ let notes = [
 
 // fetching all the notes
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
-  console.log(notes);
+  Note.find({}).then((result) => {
+    response.status(200).send(result);
+  });
 });
 
 // fetching the note by id
@@ -74,6 +103,7 @@ app.delete("/api/notes/:id", (request, response) => {
   response.status(202).end();
 });
 
+
 // Adding or creating the new note
 app.post("/api/notes", (request, response) => {
   const note = request.body;
@@ -93,6 +123,11 @@ app.post("/api/notes", (request, response) => {
   console.log(myNote);
   // response.json(note);
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+app.use(unknownEndpoint);
 
 const PORT = process.env.PORT ? process.env.PORT : 3001;
 app.listen(PORT);
