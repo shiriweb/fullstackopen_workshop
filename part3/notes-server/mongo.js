@@ -15,14 +15,18 @@ mongoose.connect(url);
 
 // ----------------
 // defining the schema
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
+// const noteSchema = new mongoose.Schema({
+//   content: {
+//     type: String,
+//     minLength: 5,
+//     required: true,
+//   },
+//   important: Boolean,
+// });
 // ------------------
 
 // creating the model for the schema
-const Note = mongoose.model("Note", noteSchema);
+// const Note = mongoose.model("Note", noteSchema);
 
 // Instance of the model
 // Creating the new the data
@@ -46,8 +50,7 @@ const Note = mongoose.model("Note", noteSchema);
 //   mongoose.connection.close();
 // });
 
-
-// using async/await 
+// using async/await
 async function getBYId() {
   const result = await Note.findById("68e8a519a0910d06ffa70d49");
   console.log(result);

@@ -1,25 +1,29 @@
 const mongoose = require("mongoose");
 const url = process.env.MONGODB_URL;
-mongoose.connect(url)  .then(result => {
-    console.log('connected to MongoDB')
+mongoose
+  .connect(url)
+  .then((result) => {
+    console.log("connected to MongoDB");
   })
-  .catch(error => {
-    console.log('error connecting to MongoDB:', error.message)
+  .catch((error) => {
+    console.log("error connecting to MongoDB:", error.message);
   });
 
-
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: {
+    type: String,
+    minLength: 5,
+    required: true,
+  },
   important: Boolean,
 });
-
-noteSchema.set('toJSON', {
+noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
 const Note = mongoose.model("Notes", noteSchema);
 module.exports = Note;
