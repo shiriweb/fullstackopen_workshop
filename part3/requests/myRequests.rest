@@ -1,16 +1,23 @@
-get http://localhost:3001/api/notes/2
+# get http://localhost:3001/api/notes
 
 ### Delete a note
 
-delete http://localhost:3001/api/notes/2
+# delete http://localhost:3001/api/notes/68e8ba304e470babc4f13e21
 
 ### adding the new note
 
-POST http://localhost:3001/api/notes
+# POST http://localhost:3001/api/notes
+# Content-Type: application/json
+# {
+#     "content": "Hello this is Ram from Pokhara",
+#     "important": false,
+#     "data": "Hello World"
+# }
+
+PUT http://localhost:3001/api/notes/68e8ba4b6bfcac03f7d865d4
 Content-Type: application/json
 
 {
-    "content": "This is Shirisha Singh from Tankeshwor",
-    "important": false,
-    "data": "Hello World"
+    "content": "Updated note content",
+    "important": true
 }
