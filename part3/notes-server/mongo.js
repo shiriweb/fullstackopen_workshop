@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Note = require("./model/note");
 
 if (process.argv.length < 3) {
   console.log("give password as argument");
