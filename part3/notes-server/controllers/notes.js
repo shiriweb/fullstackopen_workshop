@@ -1,13 +1,11 @@
 const Note = require("../model/note");
 const notesRouter = require("express").Router();
-notesRouter.get("/", (request, response, next) => {
-  Note.find({})
-    .then((result) => {
-      response.status(200).send(result);
-    })
-    .catch((error) => {
-      next(error);
-    });
+notesRouter.get("/", async (request, response) => {
+  console.log("Notes get all: Start");
+  const result = await Note.find({});
+  console.log("Notes get all: Middle");
+  response.status(200).send(result);
+  console.log("Notes get all: End");
 });
 
 notesRouter.post("/", (request, response, next) => {
