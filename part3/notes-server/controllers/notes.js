@@ -1,12 +1,10 @@
 const Note = require("../model/note");
 const notesRouter = require("express").Router();
+const User = require("../model/user");
 
 notesRouter.get("/", async (request, response) => {
-  // console.log("Notes get all: Start");
   const result = await Note.find({});
-  // console.log("Notes get all: Middle");
   response.status(200).send(result);
-  // console.log("Notes get all: End");
 });
 
 notesRouter.post("/", async (request, response, next) => {
@@ -14,14 +12,19 @@ notesRouter.post("/", async (request, response, next) => {
   if (!body.content) {
     return response.status(400).json({ error: "content missing" });
   }
+
+  const user = await User.findById(body.userId);
   const note = new Note({
     content: body.content,
     important: body.important || false,
+    user: user.id,
   });
 
   try {
-    const result = note.save();
-    response.status(201).json(result);
+    const savedNote = await note.save();
+    user.notes = user.notes.concat(savedNote.id);
+    await user.save();
+    response.status(201).json(savedNote);
   } catch (error) {
     next(error);
   }

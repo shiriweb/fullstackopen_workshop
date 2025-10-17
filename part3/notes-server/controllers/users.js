@@ -4,7 +4,10 @@ const usersRouter = require("express").Router();
 
 usersRouter.get("/", async (request, response, next) => {
   try {
-    const result = await User.find({});
+    const result = await User.find({}).populate("notes", {
+      content: 1,
+      important: 1,
+    });
     response.status(200).send(result);
   } catch (error) {
     next(error);
