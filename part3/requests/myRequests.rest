@@ -6,18 +6,20 @@
 
 ### adding the new note
 
-# POST http://localhost:3001/api/notes
-# Content-Type: application/json
-# {
-#     "content": "Hello this is Ram from Pokhara",
-#     "important": false,
-#     "data": "Hello World"
-# }
-
-PUT http://localhost:3001/api/notes/68e8ba4b6bfcac03f7d865d4
+POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "content": "Updated note content",
-    "important": true
+    "name":"Krish",
+    "username":"krish1234",
+    "password":"krish12345"
+
 }
+
+# PUT http://localhost:3001/api/notes/68e8ba4b6bfcac03f7d865d4
+# Content-Type: application/json
+
+# {
+#     "content": "Updated note content",
+#     "important": true
+# }
