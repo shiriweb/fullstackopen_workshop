@@ -1,26 +1,45 @@
 const Note = require("../model/note");
 const notesRouter = require("express").Router();
 const User = require("../model/user");
+const jwt = require("jsonwebtoken");
 
 notesRouter.get("/", async (request, response) => {
-  const result = await Note.find({});
+  const result = await Note.find({}).populate("user", { username: 1, name: 1 });
   response.status(200).send(result);
 });
 
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  console.log("Authorization header", authorization);
+  if (authorization && authorization.startsWith("Bearer")) {
+    const token = authorization.replace("Bearer ", "");
+    return token;
+  }
+  return null;
+};
 notesRouter.post("/", async (request, response, next) => {
   const body = request.body;
-  if (!body.content) {
-    return response.status(400).json({ error: "content missing" });
-  }
-
-  const user = await User.findById(body.userId);
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-    user: user.id,
-  });
 
   try {
+    const token = getTokenFrom(request);
+    if (!token) {
+      return response.status(401).json({ error: "Token missing" });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    console.log("Decoded Token:", decodedToken);
+
+    const user = await User.findById(decodedToken.id);
+    if (!user) {
+      return response.status(400).json({ error: "Invalid user" });
+    }
+
+    const note = new Note({
+      content: body.content,
+      important: body.important || false,
+      user: user.id,
+    });
+
     const savedNote = await note.save();
     user.notes = user.notes.concat(savedNote.id);
     await user.save();
