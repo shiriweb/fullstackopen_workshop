@@ -19,6 +19,7 @@ function App() {
     noteService.getAll().then((data) => {
       setNotes(data);
     });
+    setUser(JSON.parse(window.localStorage.getItem("myAuth")));
   }, []);
 
   const showingNotes = showAll
@@ -91,6 +92,8 @@ function App() {
     event.preventDefault();
     let myUser = await loginServices.login({ username, password });
     setUser(myUser);
+    noteService.setToken(myUser.token);
+    window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
   function loginForm() {
