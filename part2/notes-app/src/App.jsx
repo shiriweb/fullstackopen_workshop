@@ -3,6 +3,8 @@ import axios from "axios";
 import Note from "./components/Note";
 import noteService from "./services/note";
 import loginServices from "./services/login";
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 function App() {
   const [notes, setNotes] = useState([]);
   const [newNotes, SetNewNotes] = useState("Type something...");
@@ -10,16 +12,16 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  useEffect(function () {
-    // Getting notes from server
-    //   axios.get("http://localhost:3001/notes").then((response) => {
-    //     setNotes(response.data);
-    //   });
 
+  useEffect(function () {
     noteService.getAll().then((data) => {
       setNotes(data);
     });
-    setUser(JSON.parse(window.localStorage.getItem("myAuth")));
+    const newUser = JSON.parse(window.localStorage.getItem("myAuth"));
+    setUser(newUser);
+    if (newUser && newUser.token) {
+      noteService.setToken(newUser.token);
+    }
   }, []);
 
   const showingNotes = showAll
@@ -28,25 +30,21 @@ function App() {
         return note.important === true;
       });
 
+  const createNote = (object) => {
+    noteService.create(object).then((data) => {
+      setNotes([...notes, data]);
+    });
+  };
+
   function handleSubmit(event) {
     event.preventDefault();
     console.log(event.target);
 
     const object = {
-      // id: notes[notes.length - 1].id + 1,
       content: newNotes,
       important: Math.random() < 0.5,
     };
-
-    // adding the new note in the server
-    // axios.post("http://localhost:3001/notes", object).then((response) => {
-    //   setNotes([...notes, response.data]);
-    //   console.log(response.data);
-    // });
-
-    noteService.create(object).then((data) => {
-      setNotes([...notes, data]);
-    });
+    createNote(object);
     SetNewNotes("");
   }
 
@@ -64,16 +62,6 @@ function App() {
       ...currentNote,
       important: !currentNote.important,
     };
-
-    // Update the existing note
-    // axios
-    //   .put(`http://localhost:3001/notes/${id}`, currentNoteCopy)
-    //   .then((response) => {
-    //     const updateNotes = notes.map((note) =>
-    //       note.id !== id ? note : response.data
-    //     );
-    //     setNotes(updateNotes);
-    //   });
 
     noteService
       .update(id, currentNoteCopy)
@@ -96,49 +84,37 @@ function App() {
     window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
-  function loginForm() {
+  const loginForm = () => {
+    return (
+      <div>
+        <Togglable>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      </div>
+    );
+  };
+
+  function notesForm() {
     return (
       <>
-        <h1>My Notes</h1>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="text"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
+        <form onSubmit={handleSubmit}>
+          <input value={newNotes} onChange={handleChange} />
+          <button>Submit</button>
         </form>
       </>
     );
   }
 
-  function notesForm() {
-    return (
-      <form onSubmit={handleSubmit}>
-        <input value={newNotes} onChange={handleChange} />
-        <button>Submit</button>
-      </form>
-    );
-  }
-
   return (
     <div>
+      <h1>My Notes</h1>
+
       {!user && loginForm()}
       <br />
       {user && (
