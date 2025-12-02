@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Note from "./Note";
+import userEvent from "@testing-library/user-event";
 
 test("renders content", () => {
   const note = {
@@ -13,8 +14,6 @@ test("renders content", () => {
     "Component testing is done with react-testing-library",
     { exact: false }
   );
-  //   console.log("Element", element);
-
   expect(element).toBeDefined();
 });
 
@@ -43,4 +42,21 @@ test("renders content with container", () => {
   expect(div).toHaveTextContent(
     "Component testing is done with react-testing-library"
   );
+});
+
+test("clicking the button calls event handler once", async () => {
+  const note = {
+    content: "Component testing is done with react-testing-library",
+    important: true,
+  };
+
+  const mockHandler = vi.fn();
+
+  render(<Note note={note} updateNote={mockHandler} />);
+
+  const user = userEvent.setup();
+  const button = screen.getByText("true");
+  await user.click(button);
+
+  expect(mockHandler.mock.calls).toHaveLength(1);
 });
