@@ -164,6 +164,9 @@ function App() {
           />
         ))}
       </ul>
+      <p style={{ color: "green", fontStyle: "italic" }}>
+        Note App, Tej Center
+      </p>
     </div>
   );
 }
