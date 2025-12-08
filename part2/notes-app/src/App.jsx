@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Note from "./components/Note";
 import noteService from "./services/note";
 import loginServices from "./services/login";
+import Togglable from "./components/Togglable";
+import NoteForm from "./components/NoteForm";
 function App() {
   const [notes, setNotes] = useState([]);
   const [newNotes, SetNewNotes] = useState("Type something...");
@@ -10,6 +12,9 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const noteFormRef = useRef();
+
   useEffect(function () {
     // Getting notes from server
     //   axios.get("http://localhost:3001/notes").then((response) => {
@@ -28,27 +33,12 @@ function App() {
         return note.important === true;
       });
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(event.target);
-
-    const object = {
-      // id: notes[notes.length - 1].id + 1,
-      content: newNotes,
-      important: Math.random() < 0.5,
-    };
-
-    // adding the new note in the server
-    // axios.post("http://localhost:3001/notes", object).then((response) => {
-    //   setNotes([...notes, response.data]);
-    //   console.log(response.data);
-    // });
-
+  const createNote = (object) => {
+    noteFormRef.current.toggleVisibility();
     noteService.create(object).then((data) => {
-      setNotes([...notes, data]);
+      setNotes(notes.concat(data));
     });
-    SetNewNotes("");
-  }
+  };
 
   function handleChange(event) {
     SetNewNotes(event.target.value);
@@ -130,10 +120,9 @@ function App() {
 
   function notesForm() {
     return (
-      <form onSubmit={handleSubmit}>
-        <input value={newNotes} onChange={handleChange} />
-        <button>Submit</button>
-      </form>
+      <Togglable buttonLabel="New Note" ref={noteFormRef}>
+        <NoteForm createNote={createNote} />
+      </Togglable>
     );
   }
 
