@@ -3,20 +3,17 @@ import axios from "axios";
 import Note from "./components/Note";
 import noteService from "./services/note";
 import loginServices from "./services/login";
-import Togglable from "./components/Togglable";
 import NoteForm from "./components/NoteForm";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 function App() {
   const [notes, setNotes] = useState([]);
-  const [newNotes, SetNewNotes] = useState("Type something...");
   const [showAll, setShowAll] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   const noteFormRef = useRef();
-
 
   useEffect(function () {
     noteService.getAll().then((data) => {
@@ -41,21 +38,6 @@ function App() {
       setNotes(notes.concat(data));
     });
   };
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(event.target);
-
-    const object = {
-      content: newNotes,
-      important: Math.random() < 0.5,
-    };
-    createNote(object);
-    SetNewNotes("");
-  }
-
-  function handleChange(event) {
-    SetNewNotes(event.target.value);
-  }
 
   function changeShowState() {
     setShowAll(!showAll);
@@ -92,7 +74,7 @@ function App() {
   const loginForm = () => {
     return (
       <div>
-        <Togglable>
+        <Togglable buttonLabel="Login Toggle">
           <LoginForm
             username={username}
             password={password}
@@ -104,8 +86,6 @@ function App() {
       </div>
     );
   };
-
-  
 
   function notesForm() {
     return (
