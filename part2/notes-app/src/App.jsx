@@ -52,7 +52,6 @@ function App() {
     createNote(object);
     SetNewNotes("");
   }
->>>>>>> a0015d6a881bfa654bba6a338e292d7017589cbe
 
   function handleChange(event) {
     SetNewNotes(event.target.value);
