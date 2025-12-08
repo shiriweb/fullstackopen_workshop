@@ -5,6 +5,8 @@ import noteService from "./services/note";
 import loginServices from "./services/login";
 import Togglable from "./components/Togglable";
 import NoteForm from "./components/NoteForm";
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 function App() {
   const [notes, setNotes] = useState([]);
   const [newNotes, SetNewNotes] = useState("Type something...");
@@ -15,16 +17,16 @@ function App() {
 
   const noteFormRef = useRef();
 
-  useEffect(function () {
-    // Getting notes from server
-    //   axios.get("http://localhost:3001/notes").then((response) => {
-    //     setNotes(response.data);
-    //   });
 
+  useEffect(function () {
     noteService.getAll().then((data) => {
       setNotes(data);
     });
-    setUser(JSON.parse(window.localStorage.getItem("myAuth")));
+    const newUser = JSON.parse(window.localStorage.getItem("myAuth"));
+    setUser(newUser);
+    if (newUser && newUser.token) {
+      noteService.setToken(newUser.token);
+    }
   }, []);
 
   const showingNotes = showAll
@@ -39,6 +41,18 @@ function App() {
       setNotes(notes.concat(data));
     });
   };
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log(event.target);
+
+    const object = {
+      content: newNotes,
+      important: Math.random() < 0.5,
+    };
+    createNote(object);
+    SetNewNotes("");
+  }
+>>>>>>> a0015d6a881bfa654bba6a338e292d7017589cbe
 
   function handleChange(event) {
     SetNewNotes(event.target.value);
@@ -54,16 +68,6 @@ function App() {
       ...currentNote,
       important: !currentNote.important,
     };
-
-    // Update the existing note
-    // axios
-    //   .put(`http://localhost:3001/notes/${id}`, currentNoteCopy)
-    //   .then((response) => {
-    //     const updateNotes = notes.map((note) =>
-    //       note.id !== id ? note : response.data
-    //     );
-    //     setNotes(updateNotes);
-    //   });
 
     noteService
       .update(id, currentNoteCopy)
@@ -86,37 +90,23 @@ function App() {
     window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
-  function loginForm() {
+  const loginForm = () => {
     return (
-      <>
-        <h1>My Notes</h1>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="text"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </>
+      <div>
+        <Togglable>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      </div>
     );
-  }
+  };
+
+  
 
   function notesForm() {
     return (
@@ -128,6 +118,8 @@ function App() {
 
   return (
     <div>
+      <h1>My Notes</h1>
+
       {!user && loginForm()}
       <br />
       {user && (
