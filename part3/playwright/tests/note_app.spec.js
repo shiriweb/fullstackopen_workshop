@@ -38,14 +38,19 @@ describe("Note app", () => {
       ).toBeVisible();
     });
 
-    describe("and a note exists", () => {
+    describe("and several notes exist", () => {
       beforeEach(async ({ page }) => {
-        await createNote(page, "another note by playwright");
+        await createNote(page, "first note");
+        await createNote(page, "second note");
+        
       });
 
-      test("importance can be changed", async ({ page }) => {
-        await page.getByRole("button", { name: "true" }).click();
-        await expect(page.getByText("false")).toBeVisible();
+      test("one of those can be made nonimportant", async ({ page }) => {
+        await page.pause();
+        const otherNoteElement = page.getByText("first note");
+
+        await otherNoteElement.getByRole("button", { name: "true" }).click();
+        await expect(otherNoteElement.getByText("false")).toBeVisible();
       });
     });
 
