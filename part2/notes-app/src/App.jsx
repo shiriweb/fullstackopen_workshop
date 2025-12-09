@@ -36,7 +36,7 @@ function App() {
     noteService.create(object).then((data) => {
       setNotes([...notes, data]);
       setNewNotes("");
-      setShowNoteForm(false); // hide form after submitting
+      setShowNoteForm(false); 
     });
   }
 
