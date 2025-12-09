@@ -70,23 +70,12 @@ notesRouter.delete("/:id", async (request, response, next) => {
   }
 });
 
-// Updating the existing note
-notesRouter.put("/:id", async (request, response, next) => {
-  const { content, important } = request.body;
-  try {
-    const note = await Note.findById(request.params.id);
-    if (!note) {
-      return response.status(404).end();
-    }
-
-    note.content = content;
-    note.important = important;
-
-    return note.save().then((updatedNote) => {
-      response.json(updatedNote);
-    });
-  } catch (error) {
-    next(error);
-  }
+notesRouter.put("/:id", async (request, response) => {
+  const body = request.body;
+  const id = request.params.id;
+  const note = await Note.findById(id);
+  note.important = Boolean(body.important);
+  await note.save();
+  response.status(200).json(note);
 });
 module.exports = notesRouter;

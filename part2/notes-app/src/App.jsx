@@ -1,99 +1,66 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Note from "./components/Note";
 import noteService from "./services/note";
 import loginServices from "./services/login";
+import Note from "./components/Note";
+
 function App() {
   const [notes, setNotes] = useState([]);
-  const [newNotes, SetNewNotes] = useState("Type something...");
+  const [newNotes, setNewNotes] = useState("Type something...");
   const [showAll, setShowAll] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  useEffect(function () {
-    // Getting notes from server
-    //   axios.get("http://localhost:3001/notes").then((response) => {
-    //     setNotes(response.data);
-    //   });
+  const [showNoteForm, setShowNoteForm] = useState(false);
 
-    noteService.getAll().then((data) => {
-      setNotes(data);
-    });
-    setUser(JSON.parse(window.localStorage.getItem("myAuth")));
+  useEffect(() => {
+    noteService.getAll().then((data) => setNotes(data));
+    const loggedUser = JSON.parse(window.localStorage.getItem("myAuth"));
+    if (loggedUser) {
+      setUser(loggedUser);
+      noteService.setToken(loggedUser.token);
+    }
   }, []);
 
   const showingNotes = showAll
     ? notes
-    : notes.filter((note) => {
-        return note.important === true;
-      });
+    : notes.filter((note) => note.important);
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(event.target);
 
     const object = {
-      // id: notes[notes.length - 1].id + 1,
       content: newNotes,
       important: Math.random() < 0.5,
     };
 
-    // adding the new note in the server
-    // axios.post("http://localhost:3001/notes", object).then((response) => {
-    //   setNotes([...notes, response.data]);
-    //   console.log(response.data);
-    // });
-
     noteService.create(object).then((data) => {
       setNotes([...notes, data]);
+      setNewNotes("");
+      setShowNoteForm(false); // hide form after submitting
     });
-    SetNewNotes("");
-  }
-
-  function handleChange(event) {
-    SetNewNotes(event.target.value);
-  }
-
-  function changeShowState() {
-    setShowAll(!showAll);
   }
 
   function toggleImportant(id) {
     const currentNote = notes.find((note) => note.id === id);
-    const currentNoteCopy = {
-      ...currentNote,
-      important: !currentNote.important,
-    };
-
-    // Update the existing note
-    // axios
-    //   .put(`http://localhost:3001/notes/${id}`, currentNoteCopy)
-    //   .then((response) => {
-    //     const updateNotes = notes.map((note) =>
-    //       note.id !== id ? note : response.data
-    //     );
-    //     setNotes(updateNotes);
-    //   });
+    const updatedNote = { ...currentNote, important: !currentNote.important };
 
     noteService
-      .update(id, currentNoteCopy)
+      .update(id, updatedNote)
       .then((data) => {
-        const updateNotes = notes.map((note) => (note.id !== id ? note : data));
-        setNotes(updateNotes);
+        setNotes(notes.map((note) => (note.id !== id ? note : data)));
       })
-      .catch((error) => {
-        console.log(error);
-        alert(`The node with id ${id} does not exists`);
+      .catch(() => {
+        alert(`The note with id ${id} does not exist`);
         setNotes(notes.filter((note) => note.id !== id));
       });
   }
 
   async function handleLogin(event) {
     event.preventDefault();
-    let myUser = await loginServices.login({ username, password });
-    setUser(myUser);
-    noteService.setToken(myUser.token);
-    window.localStorage.setItem("myAuth", JSON.stringify(myUser));
+    const loggedUser = await loginServices.login({ username, password });
+    setUser(loggedUser);
+    noteService.setToken(loggedUser.token);
+    window.localStorage.setItem("myAuth", JSON.stringify(loggedUser));
   }
 
   function loginForm() {
@@ -131,8 +98,11 @@ function App() {
   function notesForm() {
     return (
       <form onSubmit={handleSubmit}>
-        <input value={newNotes} onChange={handleChange} />
-        <button>Submit</button>
+        <input
+          value={newNotes}
+          onChange={(e) => setNewNotes(e.target.value)}
+        />
+        <button type="submit">save</button>
       </form>
     );
   }
@@ -140,16 +110,21 @@ function App() {
   return (
     <div>
       {!user && loginForm()}
-      <br />
+
       {user && (
         <div>
           <p>{user.name} logged in</p>
-          {notesForm()}
+
+          {!showNoteForm && (
+            <button onClick={() => setShowNoteForm(true)}>new note</button>
+          )}
+
+          {showNoteForm && notesForm()}
         </div>
       )}
 
       <hr />
-      <button onClick={changeShowState}>
+      <button onClick={() => setShowAll(!showAll)}>
         Show {showAll ? "important" : "all"}
       </button>
 
@@ -158,16 +133,16 @@ function App() {
           <Note
             key={note.id}
             note={note}
-            updateNote={() => {
-              toggleImportant(note.id);
-            }}
+            updateNote={() => toggleImportant(note.id)}
           />
         ))}
       </ul>
+
       <p style={{ color: "green", fontStyle: "italic" }}>
         Note App, Tej Center
       </p>
     </div>
   );
 }
-export default App;
+
+export default App; 

@@ -7,9 +7,7 @@ function setToken(newToken) {
 }
 const getAll = () => {
   const request = axios.get(baseUrl);
-  return request.then((response) =>
-    response.data.concat({ id: 1000, content: "This is fake", important: true })
-  );
+  return request.then((response) => response.data());
 };
 
 const create = (newObject) => {
