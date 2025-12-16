@@ -5,4 +5,13 @@ const getAll = async () => {
   const response = await axios.get(baseUrl);
   return response.data;
 };
-export { getAll };
+
+const addNewNote = async (content) => {
+  const newNote = {
+    content,
+    important: false,
+  };
+  const response = await axios.post(baseUrl, newNote);
+  return response.data;
+};
+export { getAll, addNewNote };
