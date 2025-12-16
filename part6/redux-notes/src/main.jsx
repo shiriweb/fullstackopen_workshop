@@ -5,13 +5,14 @@ import App from "./App";
 import { createStore, combineReducers } from "redux";
 import noteReducer from "./reducers/noteReducer";
 import filterReducer from "./reducers/filterReducer";
+import { configureStore } from "@reduxjs/toolkit";
 
-const reducers = combineReducers({
-  notes: noteReducer,
-  filter: filterReducer,
+const store = configureStore({
+  reducer: {
+    notes: noteReducer,
+    filter: filterReducer,
+  },
 });
-
-export const store = createStore(reducers);
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
