@@ -6,7 +6,7 @@ const getAll = async () => {
   return response.data;
 };
 
-const addNewNote = async (content) => {
+const postNewNote = async (content) => {
   const newNote = {
     content,
     important: false,
@@ -14,4 +14,4 @@ const addNewNote = async (content) => {
   const response = await axios.post(baseUrl, newNote);
   return response.data;
 };
-export { getAll, addNewNote };
+export { getAll, postNewNote };

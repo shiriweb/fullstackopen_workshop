@@ -5,12 +5,13 @@ import Notes from "./components/Notes";
 import { getAll } from "./services/notes";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { addAllNotes } from "./reducers/noteReducer";
+import { getAndAddAllNotes } from "./reducers/noteReducer";
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    getAll().then((data) => dispatch(addAllNotes(data)));
+    // getAll().then((data) => dispatch(addAllNotes(data)));
+     dispatch(getAndAddAllNotes());
   }, []);
 
   return (

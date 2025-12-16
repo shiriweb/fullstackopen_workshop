@@ -14,6 +14,21 @@
       "id": "aa28",
       "content": "another note added",
       "important": false
+    },
+    {
+      "id": "8506",
+      "content": "redux is the used for the state management",
+      "important": false
+    },
+    {
+      "id": "b86b",
+      "content": "this is another note using the slice",
+      "important": false
+    },
+    {
+      "id": "0573",
+      "content": "hello world",
+      "important": false
     }
   ]
 }

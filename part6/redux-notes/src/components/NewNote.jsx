@@ -1,6 +1,5 @@
-import { addAllNotes } from "../reducers/noteReducer";
+import { addNewNoteWithThunk } from "../reducers/noteReducer";
 import { useDispatch } from "react-redux";
-import { addNewNote } from "../services/notes";
 
 const NewNote = () => {
   const dispatch = useDispatch();
@@ -8,9 +7,10 @@ const NewNote = () => {
     event.preventDefault();
     const content = event.target.note.value;
     event.target.note.value = "";
-    addNewNote(content).then((data) => {
-      dispatch(addAllNotes(data));
-    });
+    dispatch(addNewNoteWithThunk(content));
+    // postNewNote(content).then((data) => {
+    //   dispatch(addAllNotes(data));
+    // });
   };
 
   return (
