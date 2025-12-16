@@ -9,10 +9,4 @@ createRoot(document.getElementById("root")).render(
     <App />
   </Provider>
 );
-// let myRoot = createRoot(document.getElementById("root"));
-// function myRender() {
-//   myRoot.render(<App />);
-// }
 
-// myRender();
-// store.subscribe(myRender);
