@@ -39,6 +39,26 @@
       "id": "c829",
       "content": "this is the only note i want",
       "important": false
+    },
+    {
+      "id": "d75f",
+      "content": "new note",
+      "important": true
+    },
+    {
+      "id": "dd53",
+      "content": "adding new note",
+      "important": true
+    },
+    {
+      "id": "c083",
+      "content": "adding another note",
+      "important": true
+    },
+    {
+      "id": "c3ad",
+      "content": "this is intersting",
+      "important": true
     }
   ]
 }
