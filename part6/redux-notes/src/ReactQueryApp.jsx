@@ -22,7 +22,7 @@ const App = () => {
     },
   });
 
-  // update note mutation
+  // update note using mutation
   const updatedNoteMutation = useMutation({
     mutationFn: updatedNote, //put request
     onSuccess: () => {
