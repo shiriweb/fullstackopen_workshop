@@ -18,7 +18,7 @@
     {
       "id": "8506",
       "content": "redux is the used for the state management",
-      "important": false
+      "important": true
     },
     {
       "id": "b86b",
@@ -28,6 +28,16 @@
     {
       "id": "0573",
       "content": "hello world",
+      "important": false
+    },
+    {
+      "id": "478f",
+      "content": "can you teach me about the mutation",
+      "important": true
+    },
+    {
+      "id": "c829",
+      "content": "this is the only note i want",
       "important": false
     }
   ]
