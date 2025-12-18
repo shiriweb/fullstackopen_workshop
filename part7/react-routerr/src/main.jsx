@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 const notes = [
   {
     id: "1",
@@ -19,5 +20,7 @@ const notes = [
 ];
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <App notes={notes} />
+  <BrowserRouter>
+    <App notes={notes} />
+  </BrowserRouter>
 );

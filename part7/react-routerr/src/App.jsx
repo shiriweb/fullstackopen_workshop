@@ -1,10 +1,10 @@
 import {
-  BrowserRouter,
   Routes,
   Route,
   Link,
   useNavigate,
   Navigate,
+  useMatch,
 } from "react-router-dom";
 import Notes from "./Notes";
 import Note from "./Note";
@@ -29,7 +29,8 @@ const Users = () => {
         }}
       >
         Go to notes123
-      </button>   <button
+      </button>{" "}
+      <button
         onClick={() => {
           console.log("go to notes");
           navigate("/notes456");
@@ -45,9 +46,13 @@ const App = ({ notes }) => {
   const padding = {
     padding: 5,
   };
+  const match = useMatch("/notes/:id");
+  console.log("match is", match);
+
+  const note = match ? notes.find((note) => note.id === match.params.id) : null;
 
   return (
-    <BrowserRouter>
+    <>
       <div>
         <Link style={padding} to="/">
           home
@@ -58,10 +63,11 @@ const App = ({ notes }) => {
         <Link style={padding} to="/users">
           users
         </Link>
+        <a href="/users">Another User</a>
       </div>
 
       <Routes>
-        <Route path="/notes/:id" element={<Note notes={notes} />} />
+        <Route path="/notes/:id" element={<Note note={note} />} />
         <Route path="/notes" element={<Notes notes={notes} />} />
         <Route path="/users" element={<Users />} />
         <Route path="/" element={<Home />} />
@@ -72,7 +78,7 @@ const App = ({ notes }) => {
       <div>
         <i>Note app, Department of Computer Science 2024</i>
       </div>
-    </BrowserRouter>
+    </>
   );
 };
 
