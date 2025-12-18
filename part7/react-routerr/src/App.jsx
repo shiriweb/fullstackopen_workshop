@@ -1,4 +1,11 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import Notes from "./Notes";
 import Note from "./Note";
 
@@ -9,12 +16,30 @@ const Home = () => (
   </div>
 );
 
-const Users = () => (
-  <div>
-    {" "}
-    <h2>Users</h2>{" "}
-  </div>
-);
+const Users = () => {
+  const navigate = useNavigate();
+  return (
+    <div>
+      {" "}
+      <h2>Users</h2>{" "}
+      <button
+        onClick={() => {
+          console.log("go to notes");
+          navigate("/notes123");
+        }}
+      >
+        Go to notes123
+      </button>   <button
+        onClick={() => {
+          console.log("go to notes");
+          navigate("/notes456");
+        }}
+      >
+        Go to notes456
+      </button>
+    </div>
+  );
+};
 
 const App = ({ notes }) => {
   const padding = {
@@ -40,6 +65,8 @@ const App = ({ notes }) => {
         <Route path="/notes" element={<Notes notes={notes} />} />
         <Route path="/users" element={<Users />} />
         <Route path="/" element={<Home />} />
+        <Route path="/notes123" element={<Notes notes={notes} />} />
+        <Route path="/notes456" element={<Navigate replace to="/notes" />} />
       </Routes>
 
       <div>
