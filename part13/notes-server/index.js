@@ -14,6 +14,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 
+// Getting the notes
 app.get('/api/notes', async (req, res) => {
   const notes = await sequelize.query("SELECT * FROM notes", { type: QueryTypes.SELECT })
   res.json(notes)
