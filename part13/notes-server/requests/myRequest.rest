@@ -1,8 +1,27 @@
-POST http://localhost:3001/api/notes
+# POST http://localhost:3001/api/notes
+# Content-Type: application/json
+
+# {
+#     "content": "This is my first content1"
+
+# }
+
+
+# POST http://localhost:3001/api/users
+# Content-Type: application/json
+
+# {
+#     "username":"ram",
+#     "name": "Ram Kc"
+
+# }
+
+POST http://localhost:3001/api/login
 Content-Type: application/json
 
 {
-    "content": "This is my first content1"
+    "username":"ram",
+    "password": "secret" 
 
 }
 
