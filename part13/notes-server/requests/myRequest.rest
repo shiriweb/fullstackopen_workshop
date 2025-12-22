@@ -1,15 +1,15 @@
-#  POST http://localhost:3001/api/notes
-# Content-Type: application/json
-
-# {
-#     "content": "This is my first content2"
-
-# }
-
-PUT http://localhost:3001/api/notes/1
+POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "important": true 
+    "content": "This is my first content1"
 
 }
+
+# PUT http://localhost:3001/api/notes/1
+# Content-Type: application/json
+
+# {
+#     "important": true 
+
+# }
