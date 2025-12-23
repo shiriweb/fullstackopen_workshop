@@ -3,6 +3,8 @@ const { User, Note, Team } = require("../models");
 const { tokenExtractor } = require("../util/middleware");
 
 router.get("/", async (req, res) => {
+  // const users= await User.findAll()
+  // const users - await User.scope("admin","defaultScope").findAll()
   const users = await User.findAll({
     include: [
       {
@@ -47,20 +49,20 @@ router.get("/:id", async (req, res) => {
           attributes: ["name"],
         },
       },
-      {
-        model: Team,
-        attributes: ["name", "id"],
-        through: {
-          attributes: [],
-        },
-      },
     ],
   });
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).end();
+
+  if (!user) {
+    res.json(user).end();
   }
+  let teams = undefined;
+  if (req.query.teams) {
+    teams = await user.getTeams({
+      attributes: ["name"],
+      joinTableAttributes: [],
+    });
+  }
+  res.json({ ...user.toJSON(), teams });
 });
 
 const isAdmin = async (req, res, next) => {
