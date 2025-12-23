@@ -1,12 +1,21 @@
 const router = require("express").Router();
-const { User, Note } = require("../models");
+const { User, Note, Team } = require("../models");
 const { tokenExtractor } = require("../util/middleware");
 
 router.get("/", async (req, res) => {
   const users = await User.findAll({
-    include: {
-      model: Note,
-    },
+    include: [
+      {
+        model: Note,
+      },
+      {
+        model: Team,
+        attributes: ["name", "id"],
+        through: {
+          attributes: [],
+        },
+      },
+    ],
   });
   res.json(users);
 });
@@ -21,9 +30,17 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
+  const user = await User.findByPk(req.params.id, {
+    include: {
+      model: Note,
+    },
+  });
   if (user) {
-    res.json(user);
+    res.json({
+      username: user.username,
+      name: user.name,
+      note_count: user.notes.length,
+    });
   } else {
     res.status(404).end();
   }
