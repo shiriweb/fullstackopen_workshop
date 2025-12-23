@@ -1,10 +1,10 @@
-POST http://localhost:3001/api/notes
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhbSIsImlkIjoxLCJpYXQiOjE3NjYzODcwNDN9.O28F9hDXJkV_FF8_Q-zPMv0SWUZMPg8VdNxWDpmk2u8
-{
-    "content": "This is my first content with token",
-    "important": true
-}
+# POST http://localhost:3001/api/notes
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhbSIsImlkIjoxLCJpYXQiOjE3NjY0NjkwMjB9.8e9Xv1YTqJIX6rWrmQgwSOj5Lk75aZ4t0uTHIDL-KuE
+# {
+#     "content": "This is my first content with token",
+#     "important": true
+# }
 
 
 
@@ -12,19 +12,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhb
 # Content-Type: application/json
 
 # {
-#     "username":"ram",
-#     "name": "Ram Kc"
-
+#     "username":"gopal",
+#     "name": "Gopal Mahato",
+#     "admin": false,
+#     "disabled": true
 # }
 
-# POST http://localhost:3001/api/login
-# Content-Type: application/json
+POST http://localhost:3001/api/login
+Content-Type: application/json
 
-# {
-#     "username":"ram",
-#     "password": "secret" 
+{
+    "username":"gopal",
+    "password": "secret" 
 
-# }
+}
 
 # PUT http://localhost:3001/api/notes/1
 # Content-Type: application/json
